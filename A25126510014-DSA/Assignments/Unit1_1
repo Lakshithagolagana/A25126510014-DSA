@@ -1,0 +1,36 @@
+#include <stdio.h>
+int main()
+{
+    int n, i, id, low, high, mid;
+    int c =0;
+    printf("Enter number of employees: ");
+    scanf("%d", &n);
+    int ar[n];
+    printf("Enter employee IDs in ascending order:\n");
+    for(i = 0; i < n; i++)
+        scanf("%d", &ar[i]);
+    printf("Enter ID to search: ");
+    scanf("%d", &id);
+    low = 0;
+    high = n - 1;
+    while(low <= high)
+    {
+        c++;
+        mid = (low + high) / 2;
+        if(ar[mid] == id)
+        {
+            printf("ID found at position %d\n", mid + 1);
+            printf("Number of comparisons = %d\n", c);
+            return 0;
+        }
+        else if(id < ar[mid])
+            high = mid - 1;
+        else
+            low = mid + 1;
+    }
+    printf("ID not found\n");
+    printf("Number of comparisons = %d\n", c);
+
+    return 0;
+}
+
