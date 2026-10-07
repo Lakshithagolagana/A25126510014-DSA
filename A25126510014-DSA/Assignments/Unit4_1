@@ -1,0 +1,113 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+struct node
+{
+    int data;
+    struct node *left;
+    struct node *right;
+};
+
+struct node* create(int data)
+{
+    struct node *newnode;
+    
+    newnode = (struct node*)malloc(sizeof(struct node));
+    
+    newnode->data = data;
+    newnode->left = NULL;
+    newnode->right = NULL;
+    
+    return newnode;
+}
+
+struct node* insert(struct node *root, int data)
+{
+    if (root == NULL)
+        return create(data);
+
+    if (data < root->data)
+        root->left = insert(root->left, data);
+    
+    else if (data > root->data)
+        root->right = insert(root->right, data);
+
+    return root;
+}
+
+void inorder(struct node *root)
+{
+    if (root != NULL)
+    {
+        inorder(root->left);
+        printf("%d ", root->data);
+        inorder(root->right);
+    }
+}
+
+void preorder(struct node *root)
+{
+    if (root != NULL)
+    {
+        printf("%d ", root->data);
+        preorder(root->left);
+        preorder(root->right);
+    }
+}
+
+void postorder(struct node *root)
+{
+    if (root != NULL)
+    {
+        postorder(root->left);
+        postorder(root->right);
+        printf("%d ", root->data);
+    }
+}
+
+struct node* search(struct node *root, int key)
+{
+    if (root == NULL || root->data == key)
+        return root;
+
+    if (key < root->data)
+        return search(root->left, key);
+    else
+        return search(root->right, key);
+}
+
+int main()
+{
+    struct node *root = NULL;
+    int n, i, data, key;
+
+    printf("Enter number of nodes: ");
+    scanf("%d", &n);
+
+    printf("Enter values:\n");
+
+    for (i = 0; i < n; i++)
+    {
+        scanf("%d", &data);
+        root = insert(root, data);
+    }
+
+    printf("\nInorder Traversal: ");
+    inorder(root);
+
+    printf("\nPreorder Traversal: ");
+    preorder(root);
+
+    printf("\nPostorder Traversal: ");
+    postorder(root);
+
+    printf("\n\nEnter value to search: ");
+    scanf("%d", &key);
+
+    if (search(root, key) != NULL)
+        printf("%d exists in BST\n", key);
+    else
+        printf("%d does not exist in BST\n", key);
+
+    return 0;
+}
