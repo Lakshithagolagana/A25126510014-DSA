@@ -1,0 +1,146 @@
+#include <stdio.h>
+#include <stdlib.h>
+struct Node {
+    int data;
+    struct Node *prev;
+    struct Node *next;
+};
+struct Node *head = NULL;
+struct Node *tail = NULL;
+struct Node *current = NULL;
+
+void insert(int data) {
+    struct Node *newNode = malloc(sizeof(struct Node));
+
+    newNode->data = data;
+    newNode->prev = NULL;
+    newNode->next = NULL;
+
+    if (head == NULL) {
+        head = tail = current = newNode;
+    } else {
+        newNode->prev = tail;
+        tail->next = newNode;
+        tail = newNode;
+        current = newNode;
+    }
+}
+
+void forward() {
+    if (current == NULL || current->next == NULL)
+        printf("Cannot move forward\n");
+    else {
+        current = current->next;
+        printf("Current: %d\n", current->data);
+    }
+}
+
+void backward() {
+    if (current == NULL || current->prev == NULL)
+        printf("Cannot move backward\n");
+    else {
+        current = current->prev;
+        printf("Current: %d\n", current->data);
+    }
+}
+
+void deleteNode(int data) {
+    struct Node *temp = head;
+
+    while (temp != NULL && temp->data != data)
+        temp = temp->next;
+
+    if (temp == NULL) {
+        printf("Data not found\n");
+        return;
+    }
+
+    if (temp->prev != NULL)
+        temp->prev->next = temp->next;
+    else
+        head = temp->next;
+
+    if (temp->next != NULL)
+        temp->next->prev = temp->prev;
+    else
+        tail = temp->prev;
+
+    if (current == temp)
+        current = temp->next ? temp->next : temp->prev;
+
+    free(temp);
+    printf("Deleted successfully\n");
+}
+
+void displayForward() {
+    struct Node *temp = head;
+
+    while (temp != NULL) {
+        printf("%d <-> ", temp->data);
+        temp = temp->next;
+    }
+    printf("NULL\n");
+}
+
+void displayBackward() {
+    struct Node *temp = tail;
+
+    while (temp != NULL) {
+        printf("%d <-> ", temp->data);
+        temp = temp->prev;
+    }
+    printf("NULL\n");
+}
+
+int main() {
+    int choice, data;
+
+    while (1) {
+        printf("\n1. Insert");
+        printf("\n2. Move Forward");
+        printf("\n3. Move Backward");
+        printf("\n4. Delete");
+        printf("\n5. Display First to Last");
+        printf("\n6. Display Last to First");
+        printf("\n7. Exit");
+        printf("\nEnter choice: ");
+        scanf("%d", &choice);
+
+        switch (choice) {
+            case 1:
+                printf("Enter data: ");
+                scanf("%d", &data);
+                insert(data);
+                break;
+
+            case 2:
+                forward();
+                break;
+
+            case 3:
+                backward();
+                break;
+
+            case 4:
+                printf("Enter data: ");
+                scanf("%d", &data);
+                deleteNode(data);
+                break;
+
+            case 5:
+                displayForward();
+                break;
+
+            case 6:
+                displayBackward();
+                break;
+
+            case 7:
+                exit(0);
+
+            default:
+                printf("Invalid choice\n");
+        }
+    }
+}
+
